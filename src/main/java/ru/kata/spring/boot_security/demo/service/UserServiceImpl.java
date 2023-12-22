@@ -50,6 +50,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public List<User> getAllUsers(){return userDao.getAllUsers();}
     @Override
     @Transactional
