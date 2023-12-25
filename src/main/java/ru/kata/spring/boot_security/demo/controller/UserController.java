@@ -47,7 +47,15 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public String userPage(@RequestParam(value = "id") long id, Model model) {
+    public String userPage(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails ud = (UserDetails) authentication.getPrincipal();
+        model.addAttribute("user", userService.getUserByUsername(ud.getUsername()));
+        return "user";
+    }
+
+    @GetMapping("/user/{id}")
+    public String userPage(@PathVariable long id, Model model) {
         model.addAttribute("user", userService.getUserById(id));
         return "user";
     }
