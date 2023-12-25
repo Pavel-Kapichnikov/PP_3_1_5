@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.configs;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -27,15 +28,16 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
         if (roles.contains("ROLE_ADMIN")) {
             httpServletResponse.sendRedirect("/admin");
         } else if (roles.contains("ROLE_USER")) {
-            httpServletResponse.sendRedirect("/user?id=" + thisUserId(authentication));
+            httpServletResponse.sendRedirect("/user?id=" + currentUserId());
         } else {
             httpServletResponse.sendRedirect("/");
         }
     }
 
-    public String thisUserId(Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return String.valueOf(userService.getUserByUsername(userDetails.getUsername()).getId());
+    public String currentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails ud = (UserDetails) authentication.getPrincipal();
+        return String.valueOf(userService.getUserByUsername(ud.getUsername()).getId());
     }
 
 }

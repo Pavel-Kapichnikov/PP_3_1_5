@@ -1,12 +1,45 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title>Spring Security Example</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Security</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hind:wght@400;700&display=swap">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Hind', sans-serif;
+        }
+
+        .content {
+            text-align: center;
+            margin-top: 200px;
+            font-size: 18px;
+        }
+
+        .back {
+            background:
+                    linear-gradient(170deg, transparent 80%, #91CBCF 30%),
+                    linear-gradient(156deg, transparent 68%, #E3D9C3 30%),
+                    linear-gradient(135deg, transparent 60%, #91CBCF 30%),
+                    linear-gradient(115deg, transparent 55%, #E3D9C3 30%),
+                    linear-gradient(65deg, transparent 45%, #91CBCF 30%),
+                    linear-gradient(45deg, transparent 40%, #E3D9C3 30%),
+                    linear-gradient(24deg, transparent 32%, #91CBCF 30%),
+                    linear-gradient(10deg, transparent 20%, #E3D9C3 20%),
+                    linear-gradient(0deg, transparent 0%, #91CBCF 0%);
+            background-size: 200% 200%;
+        }
+    </style>
 </head>
-<body>
+<body class="back">
+<div class="content">
 <h1>Welcome to Index PAGE!</h1>
 <p>You can <a href="/login">login</a> to my application!</p>
-
+</div>
 
 </body>
 </html>

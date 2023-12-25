@@ -5,7 +5,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -15,29 +20,49 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
+    @NotBlank
     private String name;
+    @NotNull
+    @NotBlank
     private String lastName;
+    @NotNull
+    @Min(14)
     private Integer age;
+    @Column(unique = true)
+    @Pattern(regexp = "[a-zA-Z0-9]+")
     private String username;
+    @NotNull
+    @NotBlank
     private String password;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
     }
 
-    public User(long id, String name, String lastName, Integer age) {
-        this.id = id;
+    public User(String name, String lastName, Integer age, String username, String password) {
         this.name = name;
         this.lastName = lastName;
         this.age = age;
+        this.username = username;
+        this.password = password;
+    }
+
+    public User(String name, String lastName, Integer age, String username, String password, Set<Role> roles) {
+        this.name = name;
+        this.lastName = lastName;
+        this.age = age;
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
     }
 
     public long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -91,6 +116,8 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public void addRole(Role role) {this.roles.add(role);}
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
@@ -137,5 +164,18 @@ public class User implements UserDetails {
         result = (31 * result) ^ Objects.hashCode(lastName);
         result = (31 * result) ^ Objects.hashCode(age);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age=" + age +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }

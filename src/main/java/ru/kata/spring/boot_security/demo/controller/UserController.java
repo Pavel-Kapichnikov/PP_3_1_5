@@ -6,10 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
@@ -27,19 +24,25 @@ public class UserController {
         this.userService = userService;
     }
 
+//    @ModelAttribute("user")
+//    public User getDefaultUser() {
+//        // ваша логика получения данных или создания объекта user
+//        return new User();
+//    }
+
     @GetMapping("/admin")
     public String adminPage(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails ud = (UserDetails) authentication.getPrincipal();
 
         Set<Role> allRoles = new HashSet<>();
-            allRoles.add(new Role("ROLE_USER"));
-            allRoles.add(new Role("ROLE_ADMIN"));
+        allRoles.add(new Role("ROLE_USER"));
+        allRoles.add(new Role("ROLE_ADMIN"));
 
+        model.addAttribute("person", new User());
         model.addAttribute("allRoles", allRoles);
         model.addAttribute("currentUser", userService.getUserByUsername(ud.getUsername()));
         model.addAttribute("users", userService.getAllUsers());
-        //model.addAttribute("allRoles", Arrays.asList("ROLE_USER", "ROLE_ADMIN"));
         return "admin";
     }
 
@@ -48,24 +51,25 @@ public class UserController {
         model.addAttribute("user", userService.getUserById(id));
         return "user";
     }
-
+    /*
     @GetMapping("/create")
     public String creator(Model model) {
         model.addAttribute("user", new User());
         return "creator";
     }
+    */
 
     @PostMapping("/create")
-    public String create(@ModelAttribute("user") User user,
-                         @RequestParam(name = "ROLE_USER", defaultValue = "false") boolean userRole,
-                         @RequestParam(name = "ROLE_ADMIN", defaultValue = "false") boolean adminRole) {
+    public String create(@ModelAttribute("person") User user,
+                         @RequestParam("selectedRoles") List<String> selectedRoles) {
+        System.out.println("Received User: " + user);
+        System.out.println("Received Selected Roles: " + selectedRoles);
+
         Set<Role> tempRoles = new HashSet<>();
-        if (userRole) {
-            tempRoles.add(new Role("ROLE_USER"));
+        for (String role : selectedRoles) {
+            tempRoles.add(new Role(role));
         }
-        if (adminRole) {
-            tempRoles.add(new Role("ROLE_ADMIN"));
-        }
+
         user.setRoles(tempRoles);
         userService.createUser(user);
         return "redirect:/admin";
@@ -75,32 +79,24 @@ public class UserController {
     @GetMapping("/edit")
     public String editor(@RequestParam(value = "id") long id, Model model) {
         model.addAttribute("user1", userService.getUserById(id));
-            for (Role role : userService.getUserById(id).getRoles()) {
-                if ("ROLE_USER".equals(role.getName())) {
-                    model.addAttribute("userRole", true);
-                }
-                if ("ROLE_ADMIN".equals(role.getName())) {
-                    model.addAttribute("adminRole", true);
-                }
-            }
         return "admin";
     }*/
 
     @PostMapping("/edit")
-    public String edit(@ModelAttribute("user") User user,
-                       @RequestParam(value = "id") long id,
+    public String edit(@RequestParam("id") long id,
+                       @RequestParam("edit_name") String name,
+                       @RequestParam("edit_lastName") String lastName,
+                       @RequestParam("edit_age") Integer age,
+                       @RequestParam("edit_username") String username,
+                       @RequestParam("edit_password") String password,
                        @RequestParam("selectedRoles") List<String> selectedRoles) {
-        System.out.println("Received User: " + user);
-        System.out.println("Received ID: " + id);
-        System.out.println("Received User Name: " + user.getName());
-        System.out.println("Received Selected Roles: " + selectedRoles);
 
         Set<Role> tempRoles = new HashSet<>();
         for (String role : selectedRoles) {
             tempRoles.add(new Role(role));
         }
 
-        user.setRoles(tempRoles);
+        User user = new User(name, lastName, age, username, password, tempRoles);
         userService.editUser(id, user);
         return "redirect:/admin";
     }

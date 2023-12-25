@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.models.Role;
@@ -16,7 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Component
+@Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserDao userDao;
@@ -50,21 +51,27 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<User> getAllUsers(){return userDao.getAllUsers();}
+
     @Override
     @Transactional
     public void createUser(User user) {userDao.createUser(user);}
+
     @Override
+    @Transactional(readOnly = true)
     public User getUserById(Long id) {return userDao.getUserById(id);}
+
     @Override
     @Transactional
     public void editUser(Long id, User user) {userDao.editUser(id, user);}
+
     @Override
     @Transactional
     public void deleteUser(long id) {userDao.deleteUser(id);}
 
     @Override
+    @Transactional(readOnly = true)
     public User getUserByUsername(String username) {
         return userDao.getUserByUsername(username);
     }
