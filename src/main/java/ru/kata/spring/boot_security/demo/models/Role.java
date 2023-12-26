@@ -76,6 +76,9 @@ public class Role implements GrantedAuthority {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        int result = 17;
+        result = (31 * result) ^ Objects.hashCode(id);
+        result = (31 * result) ^ Objects.hashCode(name);
+        return result;
     }
 }

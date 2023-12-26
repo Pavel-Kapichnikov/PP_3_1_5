@@ -5,10 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
@@ -20,20 +17,20 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
-    @NotBlank
+    @Size(min = 2, max = 30, message = "Name should be between 2 and 30 characters")
+    @NotBlank(message = "Name should not be empty")
     private String name;
-    @NotNull
-    @NotBlank
+    @Size(min = 2, max = 30, message = "Last Name should be between 2 and 30 characters")
+    @NotBlank(message = "Last Name should not be empty")
     private String lastName;
-    @NotNull
-    @Min(14)
+    @NotNull(message = "Age should not be null")
+    @Min(value = 14, message = "Age should be equal to or greater  then 14")
     private Integer age;
     @Column(unique = true)
-    @Pattern(regexp = "[a-zA-Z0-9]+")
+    @Pattern(regexp = "[a-zA-Z0-9]+", message = "Username should be consist of Latin letters and numbers")
     private String username;
-    @NotNull
-    @NotBlank
+    @Size(min = 1, max = 60, message = "Password should be between 2 and 30 characters")
+    @NotBlank(message = "Name should not be empty")
     private String password;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Role> roles = new HashSet<>();

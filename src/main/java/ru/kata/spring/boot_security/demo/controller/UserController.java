@@ -6,12 +6,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.util.Arrays;
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,12 +22,13 @@ import java.util.Set;
 @Controller
 public class UserController {
     private final UserService userService;
+    public static final String REDIRECT_ADMIN = "redirect:/admin";
 
-    public UserController( UserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
-//    @ModelAttribute("user")
+    //    @ModelAttribute("user")
 //    public User getDefaultUser() {
 //        // ваша логика получения данных или создания объекта user
 //        return new User();
@@ -68,8 +72,13 @@ public class UserController {
     */
 
     @PostMapping("/create")
-    public String create(@ModelAttribute("person") User user,
+    public String create(@ModelAttribute("person") @Valid User user,
+                         BindingResult bindingResult,
                          @RequestParam("selectedRoles") List<String> selectedRoles) {
+        if (bindingResult.hasErrors()) {
+            System.out.println("Incorrect create input");
+            return REDIRECT_ADMIN;
+        }
         System.out.println("Received User: " + user);
         System.out.println("Received Selected Roles: " + selectedRoles);
 
@@ -80,7 +89,7 @@ public class UserController {
 
         user.setRoles(tempRoles);
         userService.createUser(user);
-        return "redirect:/admin";
+        return REDIRECT_ADMIN;
     }
 
     /*
@@ -92,27 +101,26 @@ public class UserController {
 
     @PostMapping("/edit")
     public String edit(@RequestParam("id") long id,
-                       @RequestParam("edit_name") String name,
+                       @RequestParam("edit_name") @Valid String name,
                        @RequestParam("edit_lastName") String lastName,
                        @RequestParam("edit_age") Integer age,
                        @RequestParam("edit_username") String username,
                        @RequestParam("edit_password") String password,
                        @RequestParam("selectedRoles") List<String> selectedRoles) {
-
         Set<Role> tempRoles = new HashSet<>();
         for (String role : selectedRoles) {
             tempRoles.add(new Role(role));
         }
-
         User user = new User(name, lastName, age, username, password, tempRoles);
+
         userService.editUser(id, user);
-        return "redirect:/admin";
+        return REDIRECT_ADMIN;
     }
 
     @GetMapping("/delete")
     public String deleteUser(@RequestParam(value = "id") long id) {
         userService.deleteUser(id);
-        return "redirect:/admin";
+        return REDIRECT_ADMIN;
     }
 }
 
