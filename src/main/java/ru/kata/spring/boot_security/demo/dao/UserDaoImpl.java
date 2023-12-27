@@ -18,17 +18,25 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        String jpql = "SELECT u FROM User u";
+        String jpql = "SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles";
         return em.createQuery(jpql).getResultList();
     }
 
     @Override
     public void createUser(User user) {
-//        for (Role role : user.getRoles()) {
-//            em.persist(role);
-//        }
-
         em.persist(user);
+    }
+
+    @Override
+    public void createRole(Role role) {
+        em.persist(role);
+    }
+
+    @Override
+    public Role getRoleByName(String roleName) {
+        String jpql = "SELECT r FROM Role r WHERE r.name = :roleName";
+        return em.createQuery(jpql, Role.class).setParameter("roleName", roleName)
+                .getSingleResult();
     }
 
     @Override
@@ -51,9 +59,6 @@ public class UserDaoImpl implements UserDao {
         userToBeEdit.setAge(user.getAge());
         userToBeEdit.setUsername(user.getUsername());
         userToBeEdit.setPassword(user.getPassword());
-        for (Role role : userToBeEdit.getRoles()) {
-            em.remove(role);
-        }
         userToBeEdit.setRoles(user.getRoles());
         em.merge(userToBeEdit);
     }

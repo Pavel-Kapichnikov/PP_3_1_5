@@ -32,7 +32,7 @@ public class User implements UserDetails {
     @Size(min = 1, max = 60, message = "Password should be between 2 and 30 characters")
     @NotBlank(message = "Name should not be empty")
     private String password;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
 
     public User() {

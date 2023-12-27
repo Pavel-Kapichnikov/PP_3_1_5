@@ -59,6 +59,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public void createUser(User user) {userDao.createUser(user);}
 
     @Override
+    @Transactional
+    public void createRole(Role role) {
+        userDao.createRole(role);
+    }
+
+    @Override
+    @Transactional
+    public Role getRoleByName(String roleName) {
+        return userDao.getRoleByName(roleName);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public User getUserById(Long id) {return userDao.getUserById(id);}
 

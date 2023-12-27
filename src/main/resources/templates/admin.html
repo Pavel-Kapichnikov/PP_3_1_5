@@ -67,7 +67,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="user, itemStat : ${users}" th:class="${user.getUsername() == currentUser.getUsername()} ? 'table-active' : ''">
+                                    <tr th:each="user : ${users}" th:class="${user.getUsername() == currentUser.getUsername()} ? 'table-active' : ''">
                                         <td th:text="${user.getId()}"></td>
                                         <td th:text="${user.getName()}"></td>
                                         <td th:text="${user.getLastName()}"></td>

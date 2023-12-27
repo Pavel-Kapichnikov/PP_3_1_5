@@ -7,8 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
@@ -82,12 +80,10 @@ public class UserController {
         System.out.println("Received User: " + user);
         System.out.println("Received Selected Roles: " + selectedRoles);
 
-        Set<Role> tempRoles = new HashSet<>();
-        for (String role : selectedRoles) {
-            tempRoles.add(new Role(role));
+        for (String roleName : selectedRoles) {
+            user.addRole(userService.getRoleByName(roleName));
         }
 
-        user.setRoles(tempRoles);
         userService.createUser(user);
         return REDIRECT_ADMIN;
     }
@@ -107,11 +103,11 @@ public class UserController {
                        @RequestParam("edit_username") String username,
                        @RequestParam("edit_password") String password,
                        @RequestParam("selectedRoles") List<String> selectedRoles) {
-        Set<Role> tempRoles = new HashSet<>();
-        for (String role : selectedRoles) {
-            tempRoles.add(new Role(role));
+        User user = new User(name, lastName, age, username, password);
+
+        for (String roleName : selectedRoles) {
+            user.addRole(userService.getRoleByName(roleName));
         }
-        User user = new User(name, lastName, age, username, password, tempRoles);
 
         userService.editUser(id, user);
         return REDIRECT_ADMIN;
