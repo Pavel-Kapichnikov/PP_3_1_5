@@ -26,12 +26,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    //    @ModelAttribute("user")
-//    public User getDefaultUser() {
-//        // ваша логика получения данных или создания объекта user
-//        return new User();
-//    }
-
     @GetMapping("/admin")
     public String adminPage(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -61,13 +55,6 @@ public class UserController {
         model.addAttribute("user", userService.getUserById(id));
         return "user";
     }
-    /*
-    @GetMapping("/create")
-    public String creator(Model model) {
-        model.addAttribute("user", new User());
-        return "creator";
-    }
-    */
 
     @PostMapping("/create")
     public String create(@ModelAttribute("person") @Valid User user,
@@ -77,23 +64,13 @@ public class UserController {
             System.out.println("Incorrect create input");
             return REDIRECT_ADMIN;
         }
-        System.out.println("Received User: " + user);
-        System.out.println("Received Selected Roles: " + selectedRoles);
 
         for (String roleName : selectedRoles) {
             user.addRole(userService.getRoleByName(roleName));
         }
-
         userService.createUser(user);
         return REDIRECT_ADMIN;
     }
-
-    /*
-    @GetMapping("/edit")
-    public String editor(@RequestParam(value = "id") long id, Model model) {
-        model.addAttribute("user1", userService.getUserById(id));
-        return "admin";
-    }*/
 
     @PostMapping("/edit")
     public String edit(@RequestParam("id") long id,
@@ -108,7 +85,6 @@ public class UserController {
         for (String roleName : selectedRoles) {
             user.addRole(userService.getRoleByName(roleName));
         }
-
         userService.editUser(id, user);
         return REDIRECT_ADMIN;
     }
@@ -119,24 +95,3 @@ public class UserController {
         return REDIRECT_ADMIN;
     }
 }
-
-/*
-
-@PostMapping("/admin/edit")
-    public String edit(@ModelAttribute("user") User user,
-                       @RequestParam(value = "id") long id,
-                       @RequestParam(name = "ROLE_USER", defaultValue = "false") boolean userRole,
-                       @RequestParam(name = "ROLE_ADMIN", defaultValue = "false") boolean adminRole) {
-        Set<Role> tempRoles = new HashSet<>();
-        if (userRole) {
-            tempRoles.add(new Role("ROLE_USER"));
-        }
-        if (adminRole) {
-            tempRoles.add(new Role("ROLE_ADMIN"));
-        }
-        user.setRoles(tempRoles);
-        userService.editUser(id, user);
-        return "redirect:/admin";
-    }
-
- */

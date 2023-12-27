@@ -6,9 +6,6 @@ import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Component
 public class DatabaseLoader implements CommandLineRunner {
     private final UserService userService;
@@ -26,7 +23,7 @@ public class DatabaseLoader implements CommandLineRunner {
         userService.createRole(adminRole);
         userService.createRole(userRole);
 
-        User main = new User("Pavel", "Gaijin", 22, "u", "u");
+        User main = new User("Pavel", "RobotXiaomi", 22, "u", "u");
         main.addRole(adminRole);
         main.addRole(userRole);
 

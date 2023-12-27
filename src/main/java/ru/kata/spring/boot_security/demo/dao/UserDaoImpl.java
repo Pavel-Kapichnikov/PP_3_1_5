@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.dao;
 
 
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
@@ -19,7 +18,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getAllUsers() {
         String jpql = "SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles";
-        return em.createQuery(jpql).getResultList();
+        return em.createQuery(jpql, User.class).getResultList();
     }
 
     @Override
