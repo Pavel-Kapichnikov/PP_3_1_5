@@ -34,13 +34,40 @@ sendGetRequest("POST", requestPostURL, body)
     .then(data => console.log(data))
     .catch(err => console.log(err));*/
 
-fetch('/api/user/current')
-    .then(response => response.json())
-    .then(data => {
-        updateHeader(data);
-        updateTable(data);
-    })
-    .catch(error => console.error('Error fetching user data:', error));
+const currentPath = window.location.pathname;
+let currentUser;
+let userById;
+
+document.addEventListener('DOMContentLoaded', async function () {
+    if (currentPath === '/user') {
+        await loadCurrentUser();
+        updateHeader(currentUser);
+        updateTable(currentUser);
+    } else {
+        await loadCurrentUser();
+        await loadUserById();
+        updateHeader(currentUser);
+        updateTable(userById);
+    }
+});
+
+async function loadCurrentUser() {
+    try {
+        const response = await fetch('/api/user/current');
+        currentUser = await response.json();
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+}
+
+async function loadUserById() {
+    try {
+        const response = await fetch(`/api${currentPath}`);
+        userById = await response.json();
+    } catch (error) {
+        console.error('Error fetching user data:', error);
+    }
+}
 
 function updateHeader(user) {
     const userDataBlock = document.getElementById('userHeaderData');
