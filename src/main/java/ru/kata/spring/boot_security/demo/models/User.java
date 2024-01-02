@@ -24,12 +24,12 @@ public class User implements UserDetails {
     @NotBlank(message = "Last Name should not be empty")
     private String lastName;
     @NotNull(message = "Age should not be null")
-    @Min(value = 14, message = "Age should be equal to or greater  then 14")
+    @Min(value = 0, message = "Age should be greater then 0")
     private Integer age;
     @Column(unique = true)
     @Pattern(regexp = "[a-zA-Z0-9]+", message = "Username should be consist of Latin letters and numbers")
     private String username;
-    @Size(min = 1, max = 60, message = "Password should be between 2 and 30 characters")
+    @Size(min = 1, max = 60, message = "Password should be between 1 and 60 characters")
     @NotBlank(message = "Name should not be empty")
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)

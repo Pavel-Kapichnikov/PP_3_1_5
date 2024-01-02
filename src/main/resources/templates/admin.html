@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Admin page</title>
@@ -256,7 +256,7 @@
                             </thead>
                             <tbody>
                             <tr class="table-active">
-                                <th th:text="${currentUser.getId()}"></th>
+                                <td th:text="${currentUser.getId()}"></td>
                                 <td th:text="${currentUser.getName()}"></td>
                                 <td th:text="${currentUser.getLastName()}"></td>
                                 <td th:text="${currentUser.getAge()}"></td>
@@ -277,6 +277,8 @@
                 </div>
             </div>
         </div>
+    </div>
 </div>
+<script src="/js/admin.js"></script>
 </body>
 </html>

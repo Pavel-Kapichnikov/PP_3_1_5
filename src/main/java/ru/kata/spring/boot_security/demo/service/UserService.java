@@ -8,6 +8,7 @@ import ru.kata.spring.boot_security.demo.models.User;
 import java.util.List;
 
 public interface UserService {
+
     List<User> getAllUsers();
 
     void createUser(User user);
@@ -18,7 +19,7 @@ public interface UserService {
 
     User getUserById(Long id);
 
-    void editUser(Long id, User user);
+    void editUser(User user);
 
     void deleteUser(long id);
 
