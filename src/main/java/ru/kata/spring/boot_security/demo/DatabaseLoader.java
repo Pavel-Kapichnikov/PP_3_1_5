@@ -25,7 +25,6 @@ public class DatabaseLoader implements CommandLineRunner {
 
         User main = new User("Pavel", "RobotXiaomi", 22, "u", "u");
         main.addRole(adminRole);
-        main.addRole(userRole);
 
         User ricardo = new User("Ricardo", "Milos", 31, "r", "r");
         ricardo.addRole(adminRole);
