@@ -70,11 +70,11 @@ async function loadUserById() {
 }
 
 function updateHeader(user) {
-    const userDataBlock = document.getElementById('userHeaderData');
+    const userDataBlock = document.getElementById('headerData');
     userDataBlock.innerHTML = `
                 <span class="font-weight-bold">${user.username}</span> with roles:
                 <span>${user.roles.join(' ')}</span>
-            `;
+                `;
 }
 
 function updateTable(user) {
