@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.dto.UserDTO;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 import ru.kata.spring.boot_security.demo.util.UserErrorResponse;
@@ -17,6 +18,7 @@ import ru.kata.spring.boot_security.demo.util.UserNotEditException;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -24,7 +26,6 @@ import java.util.stream.Collectors;
 public class AdminController {
     private final UserService userService;
     private final ModelMapper modelMapper;
-    public static final String REDIRECT_ADMIN = "redirect:/admin";
 
     public AdminController(UserService userService,
                            ModelMapper modelMapper) {
@@ -102,8 +103,15 @@ public class AdminController {
     }
 
     private User convertToUser(UserDTO userDTO) {
-        return modelMapper.map(userDTO, User.class);
+        User user = modelMapper.map(userDTO, User.class);
+        Set<Role> rolesFromDB = userDTO.getRoles().stream()
+                .map(roleName -> "ROLE_" + roleName)
+                .map(userService::getRoleByName)
+                .collect(Collectors.toSet());
+        user.setRoles(rolesFromDB);
+        return user;
     }
+
 
     private UserDTO convertToUserDTO(User user) {
         return modelMapper.map(user, UserDTO.class);

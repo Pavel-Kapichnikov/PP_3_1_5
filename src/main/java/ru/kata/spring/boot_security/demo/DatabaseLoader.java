@@ -23,20 +23,20 @@ public class DatabaseLoader implements CommandLineRunner {
         userService.createRole(adminRole);
         userService.createRole(userRole);
 
-        User main = new User("Pavel", "RobotXiaomi", 22, "u", "u");
-        main.addRole(adminRole);
+        User main = new User("Pavel", "RobotXiaomi", 24, "u", "u");
+        main.addRole(userRole);
 
         User ricardo = new User("Ricardo", "Milos", 31, "r", "r");
         ricardo.addRole(adminRole);
         ricardo.addRole(userRole);
 
-        User natalia = new User("Natalia", "Marines", 43, "user", "user");
+        User natalia = new User("Natalia", "Marines", 43, "n", "n");
         natalia.addRole(userRole);
 
-        User alex = new User("Alex", "Jeweler", 22, "a", "a");
-        alex.addRole(userRole);
+        User alex = new User("Alex", "White", 24, "admin", "admin");
+        alex.addRole(adminRole);
 
-        User oleg = new User("Oleg", "GoodJob", 14, "o", "o");
+        User oleg = new User("Oleg", "GoodJob", 14, "user", "user");
         oleg.addRole(userRole);
 
         userService.createUser(main);

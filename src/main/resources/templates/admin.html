@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin page</title>
+    <meta id="csrfHeader" data-th-content="${_csrf.headerName}">
+    <meta id="csrfToken" data-th-content="${_csrf.token}">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -127,7 +129,7 @@
                                                 </button>
                                             </div>
                                             <div class="modal-body w-50 mx-auto text-center">
-                                                <form>
+                                                <form id="deleteForm">
                                                     <div class="form-group">
                                                         <label class="font-weight-bold" for="delID">ID</label>
                                                         <input type="number" class="form-control" id="delID" disabled>
@@ -159,7 +161,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <a type="button" class="btn btn-danger">Delete</a>
+                                                <button type="button" id="deleteBtn" class="btn btn-danger">Delete</button>
                                             </div>
                                         </div>
                                     </div>
@@ -195,10 +197,11 @@
                                         <div class="form-group">
                                             <label class="font-weight-bold" for="createRoleSelect">Role</label>
                                             <select multiple class="form-control" id="createRoleSelect" name="selectedRoles" size="2">
-                                                <option></option>
+                                                <option name="createOptions" value="ADMIN">ADMIN</option>
+                                                <option name="createOptions" value="USER">USER</option>
                                             </select>
                                         </div>
-                                        <button type="submit" class="btn btn-success">Add new user</button>
+                                        <button type="button" id="createBtn" class="btn btn-success">Add new user</button>
                                     </form>
                                 </div>
                             </div>

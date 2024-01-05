@@ -2,7 +2,9 @@ const currentPath = window.location.pathname;
 let currentUser;
 let usersList;
 
-document.addEventListener('DOMContentLoaded', async function () {
+document.addEventListener('DOMContentLoaded', updatePage);
+
+async function updatePage() {
     await loadCurrentUser();
     await loadUsersList();
     updateHeader(currentUser);
@@ -18,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
 
     updateUserTable(currentUser);
-});
+}
 
 async function loadCurrentUser() {
     try {
@@ -114,31 +116,96 @@ function deleteModalHandler() {
 }
 
 document.getElementById('editBtn').addEventListener('click', function () {
-    //event.preventDefault();
 
-    const form = document.getElementById('editForm');
+    const csrfToken = document.getElementById('csrfToken').content;
+    const csrfHeader = document.getElementById('csrfHeader').content;
+
     let userDTO = {
         id: document.getElementById('editID').value,
-        firstname: document.getElementById('editName').value,
-        lastname: document.getElementById('editLastName').value,
+        name: document.getElementById('editName').value,
+        lastName: document.getElementById('editLastName').value,
         age: document.getElementById('editAge').value,
         username: document.getElementById('editUsername').value,
         password: document.getElementById('editPassword').value,
-        roles: Array.from(document.getElementById('editRoleSelect').selectedOptions).map(option => "ROLE_" + option.value)
+        roles: Array.from(document.getElementById('editRoleSelect').selectedOptions).map(option => option.value)
     };
 
     const requestOptions = {
         method: 'POST',
-        body: JSON.stringify(userDTO),
         headers: {
             "Content-Type": "application/json",
+            [csrfHeader]: csrfToken,
         },
+        body: JSON.stringify(userDTO),
     };
 
     fetch('api/admin/edit', requestOptions)
         .then(response => {
             if (response.ok) {
                 console.log('Form data submitted successfully!');
+                $('#editModal').modal('hide');
+                updatePage();
+            } else {
+                console.error('Error submitting form data:', response.statusText);
+            }
+        })
+        .catch(error => {
+            console.error('Error submitting form data:', error);
+        });
+});
+
+document.getElementById('deleteBtn').addEventListener('click', function () {
+    if (!confirm('Вы уверены, что хотите удалить пользователя?')) {
+        return;
+    }
+
+    const userID = document.getElementById('delID').value;
+    console.log(userID);
+
+    fetch(`api/admin/delete?id=${userID}`)
+        .then(response => {
+            if (response.ok) {
+                console.log('User successfully deleted!');
+                $('#deleteModal').modal('hide');
+                updatePage();
+            } else {
+                console.error('Error when trying to delete a user:', response.statusText);
+            }
+        })
+        .catch(error => {
+            console.error('Error when trying to delete a user:', error);
+        });
+});
+
+document.getElementById('createBtn').addEventListener('click', function () {
+
+    const csrfToken = document.getElementById('csrfToken').content;
+    const csrfHeader = document.getElementById('csrfHeader').content;
+
+    let userDTO = {
+        name: document.getElementById('createName').value,
+        lastName: document.getElementById('createLastName').value,
+        age: document.getElementById('createAge').value,
+        username: document.getElementById('createUsername').value,
+        password: document.getElementById('createPassword').value,
+        roles: Array.from(document.getElementById('createRoleSelect').selectedOptions).map(option => option.value)
+    };
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            [csrfHeader]: csrfToken,
+        },
+        body: JSON.stringify(userDTO),
+    };
+
+    fetch('api/admin/create', requestOptions)
+        .then(response => {
+            if (response.ok) {
+                console.log('Form data submitted successfully!');
+                updatePage();
+                $('#myTab a[href="#usersTable"]').tab('show');
             } else {
                 console.error('Error submitting form data:', response.statusText);
             }

@@ -1,42 +1,8 @@
-/*
-const requestGetURL = "http://localhost:8080/user";
-
-function sendGetRequest(method, url, body = null) {
-    return fetch(url).then(response => {
-        return response.json();
-    });
-}
-
-sendGetRequest("GET", requestGetURL)
-    .then(data => console.log(data))
-    .catch(err => console.log(err));
-
-const requestPostURL = "http://localhost:8080/admin/create";
-function sendPostRequest(method, url, body = null) {
-    const headers = {
-        "Content-Type": "application/json"
-    }
-    return fetch(url, {
-        method: method,
-        body: JSON.stringify(body),
-        headers: headers
-    }).then(response => {
-        if (response.ok) {
-            return response.json();
-        }
-        return response.json().then(error => {
-            throw new Error("Something went wrong");
-        })
-    });
-}
-
-sendGetRequest("POST", requestPostURL, body)
-    .then(data => console.log(data))
-    .catch(err => console.log(err));*/
-
 const currentPath = window.location.pathname;
 let currentUser;
 let userById;
+
+console.log(currentPath)
 
 document.addEventListener('DOMContentLoaded', async function () {
     if (currentPath === '/user') {
